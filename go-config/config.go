@@ -160,14 +160,28 @@ func (c Config) AsInt(key string) (int, error) {
 	return int(vv), nil
 }
 
-func (c Config) AddDefault(key string, value string) (bool,error) {
+func (c Config) AddDefaultString(key string, value string) (bool,error) {
 	tmp := make(map[string]interface{})
 	tmp[key] = value
 	c.nestedMerge(tmp,"",false)
 	return true,nil
 }
 
-func (c Config) AddDefaultWithSection(key string, value string, section string) (bool,error) {
+func (c Config) AddDefaultInt(key string, value int) (bool,error) {
+	tmp := make(map[string]interface{})
+	tmp[key] = value
+	c.nestedMerge(tmp,"",false)
+	return true,nil
+}
+
+func (c Config) AddDefaultStringWithSection(key string, value string, section string) (bool,error) {
+	tmp := make(map[string]interface{})
+	tmp[key] = value
+	c.nestedMerge(tmp,section,false)
+	return true,nil
+}
+
+func (c Config) AddDefaultIntWithSection(key string, value int, section string) (bool,error) {
 	tmp := make(map[string]interface{})
 	tmp[key] = value
 	c.nestedMerge(tmp,section,false)
