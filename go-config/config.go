@@ -167,10 +167,24 @@ func (c Config) AddDefault(key string, value string) (bool,error) {
 	return true,nil
 }
 
+func (c Config) AddDefaultOverride(key string, value string) (bool,error) {
+	tmp := make(map[string]interface{})
+	tmp[key] = value
+	c.nestedMerge(tmp,"",true)
+	return true,nil
+}
+
 func (c Config) AddDefaultString(key string, value string) (bool,error) {
 	tmp := make(map[string]interface{})
 	tmp[key] = value
 	c.nestedMerge(tmp,"",false)
+	return true,nil
+}
+
+func (c Config) AddDefaultStringOverride(key string, value string) (bool,error) {
+	tmp := make(map[string]interface{})
+	tmp[key] = value
+	c.nestedMerge(tmp,"",true)
 	return true,nil
 }
 
@@ -181,10 +195,24 @@ func (c Config) AddDefaultInt(key string, value int) (bool,error) {
 	return true,nil
 }
 
+func (c Config) AddDefaultIntOverride(key string, value int) (bool,error) {
+	tmp := make(map[string]interface{})
+	tmp[key] = value
+	c.nestedMerge(tmp,"",true)
+	return true,nil
+}
+
 func (c Config) AddDefaultWithSection(key string, value string, section string) (bool,error) {
 	tmp := make(map[string]interface{})
 	tmp[key] = value
 	c.nestedMerge(tmp,section,false)
+	return true,nil
+}
+
+func (c Config) AddDefaultOverrideWithSection(key string, value string, section string) (bool,error) {
+	tmp := make(map[string]interface{})
+	tmp[key] = value
+	c.nestedMerge(tmp,section,true)
 	return true,nil
 }
 
@@ -195,9 +223,23 @@ func (c Config) AddDefaultStringWithSection(key string, value string, section st
 	return true,nil
 }
 
+func (c Config) AddDefaultStringOverrideWithSection(key string, value string, section string) (bool,error) {
+	tmp := make(map[string]interface{})
+	tmp[key] = value
+	c.nestedMerge(tmp,section,true)
+	return true,nil
+}
+
 func (c Config) AddDefaultIntWithSection(key string, value int, section string) (bool,error) {
 	tmp := make(map[string]interface{})
 	tmp[key] = value
 	c.nestedMerge(tmp,section,false)
+	return true,nil
+}
+
+func (c Config) AddDefaultIntOverrideWithSection(key string, value int, section string) (bool,error) {
+	tmp := make(map[string]interface{})
+	tmp[key] = value
+	c.nestedMerge(tmp,section,true)
 	return true,nil
 }
