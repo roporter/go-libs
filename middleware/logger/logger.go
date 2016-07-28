@@ -7,9 +7,7 @@ import (
 	"sync"
 
 	"github.com/kataras/iris"
-	"github.com/kataras/iris/config"
-	//"github.com/kataras/iris/logger"
-	"github.com/iris-contrib/middleware/logger"
+	"github.com/iris-contrib/logger"
 	"github.com/reconquest/loreley"
 )
 
@@ -108,7 +106,7 @@ func (l *loggerMiddleware) printf(format string, a ...interface{}) {
 // second is optional configs(logger.Config)
 func New(theLogger *logger.Logger, cfg ...Config) iris.HandlerFunc {
 	if theLogger == nil {
-		theLogger = logger.New(config.DefaultLogger())
+		theLogger = logger.New(logger.DefaultConfig())
 	}
 	c := DefaultConfig().Merge(cfg)
 	l := &loggerMiddleware{Logger: theLogger, config: c}
