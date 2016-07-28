@@ -9,7 +9,7 @@ import (
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/config"
 	"github.com/kataras/iris/logger"
-	"github.com/roporter/go-loreley"
+	"github.com/reconquest/loreley"
 )
 
 type loggerMiddleware struct {
