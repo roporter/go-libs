@@ -41,6 +41,7 @@ func (l *loggerMiddleware) Serve(ctx *iris.Context) {
 		}
 		latency = parts[0] + "." + parts[1]
 	}
+	latency = leftPad2Len(latency," ",14)
 	
 	if l.config.Status {
 		status = strconv.Itoa(ctx.Response.StatusCode())
@@ -59,7 +60,27 @@ func (l *loggerMiddleware) Serve(ctx *iris.Context) {
 	}
 
 	getText, _ := loreley.CompileAndExecuteToString(
-		`{bold}{fg 15}{bg 40} GET {from "" 0}{reset}`,
+		`{bold}{fg 15}{bg 40} GET  {from "" 0}{reset}`,
+		nil,
+		nil,
+	)
+	postText, _ := loreley.CompileAndExecuteToString(
+		`{bold}{fg 15}{bg 21} POST {from "" 0}{reset}`,
+		nil,
+		nil,
+	)
+	headText, _ := loreley.CompileAndExecuteToString(
+		`{bold}{fg 15}{bg 53} HEAD {from "" 0}{reset}`,
+		nil,
+		nil,
+	)
+	putText, _ := loreley.CompileAndExecuteToString(
+		`{bold}{fg 15}{bg 208} PUT  {from "" 0}{reset}`,
+		nil,
+		nil,
+	)
+	delText, _ := loreley.CompileAndExecuteToString(
+		`{bold}{fg 15}{bg 160} DEL  {from "" 0}{reset}`,
 		nil,
 		nil,
 	)
@@ -68,6 +89,22 @@ func (l *loggerMiddleware) Serve(ctx *iris.Context) {
 	if(method == "GET") {
 		mapLock.RLock()
 		l.printf("%s %s - %s | %v | %4v | %s | %s \n", getText, timed, date, status, latency, ip, path)
+		mapLock.RUnlock()
+	} else if method == "POST" {
+		mapLock.RLock()
+		l.printf("%s %s - %s | %v | %4v | %s | %s \n", postText, timed, date, status, latency, ip, path)
+		mapLock.RUnlock()
+	} else if method == "PUT" {
+		mapLock.RLock()
+		l.printf("%s %s - %s | %v | %4v | %s | %s \n", putText, timed, date, status, latency, ip, path)
+		mapLock.RUnlock()
+	} else if method == "HEAD" {
+		mapLock.RLock()
+		l.printf("%s %s - %s | %v | %4v | %s | %s \n", headText, timed, date, status, latency, ip, path)
+		mapLock.RUnlock()
+	} else if method == "DELETE" {
+		mapLock.RLock()
+		l.printf("%s %s - %s | %v | %4v | %s | %s \n", delText, timed, date, status, latency, ip, path)
 		mapLock.RUnlock()
 	} else {
 		mapLock.RLock()
