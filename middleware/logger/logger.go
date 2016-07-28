@@ -8,7 +8,8 @@ import (
 
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/config"
-	"github.com/kataras/iris/logger"
+	//"github.com/kataras/iris/logger"
+	"github.com/iris-contrib/middleware/logger"
 	"github.com/reconquest/loreley"
 )
 
