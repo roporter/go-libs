@@ -151,22 +151,22 @@ func (c Config) GetString(key string) string {
 // AsInt returns a key from the configuration as an integer. Integer values in the
 // json file are retrieved as float64. This will return an error if it's not a float64.
 // Otherwise will convert it to an int (with truncation).
-func (c Config) GetInt(key string) (int, error) {
+func (c Config) GetInt(key string) int {
 	v := c.Get(key)
 	vv, ok := v.(float64)
 	if !ok {
-		return 0, fmt.Errorf("Expected config property to be a numeric value, but wasn't: '%s'", v)
+		return 0
 	}
-	return int(vv), nil
+	return int(vv)
 }
 
-func (c Config) GetBool(key string) (bool, error) {
+func (c Config) GetBool(key string) bool {
 	v := c.Get(key)
 	vv, ok := v.(bool)
 	if !ok {
-		return false, fmt.Errorf("Expected config property to be a bool value, but wasn't: '%s'", v)
+		return false
 	}
-	return bool(vv), nil
+	return bool(vv)
 }
 
 func (c Config) AddDefault(key string, value string) (bool,error) {
