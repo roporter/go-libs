@@ -140,7 +140,7 @@ func (c Config) HasKey(key string) bool {
 
 // AsString returns a key from the configuration (using Get), but returning it as a string.
 // If the key is not defined, it returns "".
-func (c Config) AsString(key string) string {
+func (c Config) GetString(key string) string {
 	v := c.Get(key)
 	if v == nil {
 		return ""
@@ -151,13 +151,22 @@ func (c Config) AsString(key string) string {
 // AsInt returns a key from the configuration as an integer. Integer values in the
 // json file are retrieved as float64. This will return an error if it's not a float64.
 // Otherwise will convert it to an int (with truncation).
-func (c Config) AsInt(key string) (int, error) {
+func (c Config) GetInt(key string) (int, error) {
 	v := c.Get(key)
 	vv, ok := v.(float64)
 	if !ok {
 		return 0, fmt.Errorf("Expected config property to be a numeric value, but wasn't: '%s'", v)
 	}
 	return int(vv), nil
+}
+
+func (c Config) GetBool(key string) (bool, error) {
+	v := c.Get(key)
+	vv, ok := v.(bool)
+	if !ok {
+		return 0, fmt.Errorf("Expected config property to be a numeric value, but wasn't: '%s'", v)
+	}
+	return bool(vv), nil
 }
 
 func (c Config) AddDefault(key string, value string) (bool,error) {
@@ -182,6 +191,20 @@ func (c Config) AddDefaultString(key string, value string) (bool,error) {
 }
 
 func (c Config) AddDefaultStringOverride(key string, value string) (bool,error) {
+	tmp := make(map[string]interface{})
+	tmp[key] = value
+	c.nestedMerge(tmp,"",true)
+	return true,nil
+}
+
+func (c Config) AddDefaultBool(key string, value bool) (bool,error) {
+	tmp := make(map[string]interface{})
+	tmp[key] = value
+	c.nestedMerge(tmp,"",false)
+	return true,nil
+}
+
+func (c Config) AddDefaultBoolOverride(key string, value bool) (bool,error) {
 	tmp := make(map[string]interface{})
 	tmp[key] = value
 	c.nestedMerge(tmp,"",true)
