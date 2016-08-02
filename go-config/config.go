@@ -212,14 +212,14 @@ func (c Config) AddDefaultBoolOverride(key string, value bool) (bool,error) {
 }
 
 
-func (c Config) AddDefaultArray(key string, value []string]) (bool,error) {
+func (c Config) AddDefaultArray(key string, value []string) (bool,error) {
 	tmp := make(map[string]interface{})
 	tmp[key] = value
 	c.nestedMerge(tmp,"",false)
 	return true,nil
 }
 
-func (c Config) AddDefaultArrayOverride(key string, value []string]) (bool,error) {
+func (c Config) AddDefaultArrayOverride(key string, value []string) (bool,error) {
 	tmp := make(map[string]interface{})
 	tmp[key] = value
 	c.nestedMerge(tmp,"",true)
