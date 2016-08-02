@@ -164,7 +164,7 @@ func (c Config) GetBool(key string) (bool, error) {
 	v := c.Get(key)
 	vv, ok := v.(bool)
 	if !ok {
-		return 0, fmt.Errorf("Expected config property to be a numeric value, but wasn't: '%s'", v)
+		return false, fmt.Errorf("Expected config property to be a bool value, but wasn't: '%s'", v)
 	}
 	return bool(vv), nil
 }
