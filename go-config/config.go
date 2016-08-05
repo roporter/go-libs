@@ -173,7 +173,7 @@ func (c Config) GetStringArray(key string) []string {
 	v := c.Get(key)
 	vv, ok := v.([]string)
 	if !ok {
-		return false
+		return []string{}
 	}
 	return []string(vv)
 }
