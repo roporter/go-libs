@@ -200,7 +200,7 @@ func (c Config) AddDefaultString(key string, value string) (bool,error) {
 }
 
 func (c Config) AddDefaultStringOverride(key string, value string) (bool,error) {
-	tmp := make(map[string]string{})
+	tmp := make(map[string]interface{})
 	tmp[key] = value
 	c.nestedMerge(tmp,"",true)
 	return true,nil
@@ -229,6 +229,8 @@ func (c Config) AddDefaultStringArray(key string, value []string) (bool,error) {
 }
 
 func (c Config) AddDefaultStringArrayOverride(key string, value []string) (bool,error) {
+	fmt.Println(key)
+	fmt.Println(value)
 	tmp := make(map[string]interface{})
 	tmp[key] = value
 	c.nestedMerge(tmp,"",true)
