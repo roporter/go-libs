@@ -171,11 +171,11 @@ func (c Config) GetBool(key string) bool {
 
 func (c Config) GetStringArray(key string) []string {
 	v := c.Get(key)
-	vv, ok := v.([]string])
+	vv, ok := v.([]string)
 	if !ok {
 		return false
 	}
-	return []string](vv)
+	return []string(vv)
 }
 
 func (c Config) AddDefault(key string, value string) (bool,error) {
