@@ -169,6 +169,15 @@ func (c Config) GetBool(key string) bool {
 	return bool(vv)
 }
 
+func (c Config) GetStringArray(key string) []string {
+	v := c.Get(key)
+	vv, ok := v.([]string])
+	if !ok {
+		return false
+	}
+	return []string](vv)
+}
+
 func (c Config) AddDefault(key string, value string) (bool,error) {
 	tmp := make(map[string]interface{})
 	tmp[key] = value
@@ -212,14 +221,14 @@ func (c Config) AddDefaultBoolOverride(key string, value bool) (bool,error) {
 }
 
 
-func (c Config) AddDefaultArray(key string, value []string) (bool,error) {
+func (c Config) AddDefaultStringArray(key string, value []string) (bool,error) {
 	tmp := make(map[string]interface{})
 	tmp[key] = value
 	c.nestedMerge(tmp,"",false)
 	return true,nil
 }
 
-func (c Config) AddDefaultArrayOverride(key string, value []string) (bool,error) {
+func (c Config) AddDefaultStringArrayOverride(key string, value []string) (bool,error) {
 	tmp := make(map[string]interface{})
 	tmp[key] = value
 	c.nestedMerge(tmp,"",true)
