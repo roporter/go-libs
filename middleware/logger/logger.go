@@ -9,6 +9,7 @@ import (
 	"github.com/kataras/iris"
 	"github.com/iris-contrib/logger"
 	"github.com/reconquest/loreley"
+	"github.com/fatih/color"
 )
 
 type loggerMiddleware struct {
@@ -36,12 +37,14 @@ func (l *loggerMiddleware) Serve(ctx *iris.Context) {
 	latency = endTime.Sub(startTime).String()
 	parts := strings.Split(latency,".")
 	if(len(parts) == 2) {
-	    	if(!strings.Contains(parts[1],"ms")) {
+	    if(!strings.Contains(parts[1],"ms")) {
 			parts[1] = leftPad2Len(parts[1],"0",6)
 		}
 		latency = parts[0] + "." + parts[1]
+		latency = leftPad2Len(latency," ",15)		
+	} else {
+		latency = leftPad2Len(latency," ",14)
 	}
-	latency = leftPad2Len(latency," ",14)
 	
 	if l.config.Status {
 		status = strconv.Itoa(ctx.Response.StatusCode())
@@ -84,6 +87,12 @@ func (l *loggerMiddleware) Serve(ctx *iris.Context) {
 		nil,
 		nil,
 	)
+	
+	if(status == "200" || status == "201") {
+		status = color.GreenString(status)
+	} else if(status == "404" || status == "500" || status == "403") {
+		status = color.RedString(status)
+	}
 
 	//finally print the logs
 	if(method == "GET") {
