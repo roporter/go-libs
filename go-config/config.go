@@ -134,6 +134,19 @@ func (c Config) Get(key string) interface{} {
 	return c[key]
 }
 
+func (c Config) GetKeyAsStringArray(key string) []string {
+	tmp := make([]string,0)
+	switch reflect.TypeOf(c[key]).Kind() {
+		case reflect.Slice:
+			s := reflect.ValueOf(c[key])
+
+			for i := 0; i < s.Len(); i++ {
+				tmp = append(tmp, fmt.Sprintf("%v",s.Index(i)))
+			}
+		}
+	return tmp
+}
+
 func (c Config) HasKey(key string) bool {
 	return c[key] != nil
 }
