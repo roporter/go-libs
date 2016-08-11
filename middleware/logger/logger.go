@@ -90,7 +90,7 @@ func (l *loggerMiddleware) Serve(ctx *iris.Context) {
 	
 	if(status == "200" || status == "201") {
 		status = color.GreenString(status)
-	} else if(status == "404" || status == "500" || status == "403") {
+	} else if(status == "404" || status == "500" || status == "403" || status == "401") {
 		status = color.RedString(status)
 	}
 
