@@ -10,10 +10,16 @@ import (
 	"github.com/iris-contrib/logger"
 	"github.com/reconquest/loreley"
 	"github.com/fatih/color"
+	"github.com/Sirupsen/logrus"
 )
 
 type loggerMiddleware struct {
 	*logger.Logger
+	config Config
+}
+
+type loggerMiddleware2 struct {
+	Logger *logrus.Entry
 	config Config
 }
 
@@ -41,11 +47,11 @@ func (l *loggerMiddleware) Serve(ctx *iris.Context) {
 			parts[1] = leftPad2Len(parts[1],"0",6)
 		}
 		latency = parts[0] + "." + parts[1]
-		latency = leftPad2Len(latency," ",15)		
+		latency = leftPad2Len(latency," ",15)
 	} else {
 		latency = leftPad2Len(latency," ",14)
 	}
-	
+
 	if l.config.Status {
 		status = strconv.Itoa(ctx.Response.StatusCode())
 	}
@@ -87,7 +93,7 @@ func (l *loggerMiddleware) Serve(ctx *iris.Context) {
 		nil,
 		nil,
 	)
-	
+
 	if(status == "200" || status == "201") {
 		status = color.GreenString(status)
 	} else if(status == "404" || status == "500" || status == "403" || status == "401") {
@@ -123,6 +129,52 @@ func (l *loggerMiddleware) Serve(ctx *iris.Context) {
 
 }
 
+func (l *loggerMiddleware2) Serve2(ctx *iris.Context) {
+	var date, timed, latency, status, ip, method, path string
+	var startTime, endTime time.Time
+	path = ctx.PathString()
+	method = ctx.MethodString()
+	startTime = time.Now()
+
+	ctx.Next()
+
+	endTime = time.Now()
+	timed = rightPad2Len(endTime.Format("15:04:05.999999"), "0", 15)
+	date = endTime.Format("02/01/2006")
+	latency = endTime.Sub(startTime).String()
+	parts := strings.Split(latency,".")
+	if(len(parts) == 2) {
+	    if(!strings.Contains(parts[1],"ms")) {
+			parts[1] = leftPad2Len(parts[1],"0",6)
+		}
+		latency = parts[0] + "." + parts[1]
+		latency = leftPad2Len(latency," ",15)
+	} else {
+		latency = leftPad2Len(latency," ",14)
+	}
+
+	if l.config.Status {
+		status = strconv.Itoa(ctx.Response.StatusCode())
+	}
+
+	if l.config.IP {
+		ip = leftPad2Len(ctx.RemoteAddr()," ",15)
+	}
+
+	if !l.config.Method {
+		method = ""
+	}
+
+	if !l.config.Path {
+		path = ""
+	}
+
+
+	mapLock.RLock()
+	l.Logger.Debug(timed + " - " + date + " | " + status + " | " + latency + "  | " + ip + " | " + path + " | " + method)
+	mapLock.RUnlock()
+}
+
 func rightPad2Len(s string, padStr string, overallLen int) string{
 	var padCountInt int
 	padCountInt = 1 + ((overallLen-len(padStr))/len(padStr))
@@ -145,6 +197,14 @@ func (l *loggerMiddleware) printf(format string, a ...interface{}) {
 	}
 }
 
+func NewLogFile(theLogger *logrus.Entry, cfg ...Config) iris.HandlerFunc {
+	if theLogger == nil {
+		return nil
+	}
+	c := DefaultConfig().Merge(cfg)
+	l := &loggerMiddleware2{Logger: theLogger, config: c}
+	return l.Serve2
+}
 // New returns the logger middleware
 // receives two parameters, both of them optionals
 // first is the logger, which normally you set to the 'iris.Logger'
